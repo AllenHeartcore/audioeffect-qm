@@ -1,0 +1,9 @@
+DJEffectProject.djproj
+44100/1.wav
+48000/1.wav
+44100/2.wav
+48000/2.wav
+44100/3.wav
+48000/3.wav
+44100/4.wav
+48000/4.wav
