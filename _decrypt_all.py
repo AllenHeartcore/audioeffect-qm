@@ -1,26 +1,50 @@
-import warnings
-
 import os
-import json
 
-from qmae.scheme import QMAEScheme
+from qmae.decrypt import QMAEDecryptor
+
+# Unlike audioeffect-ncm, we circumvent QMAEScheme
+# and directly use QMAEDecryptor since
+#   (1) read_encfile is deprecated here since the key is hardcoded,
+#       so all encrypted files are treated as unstructured raw binary, and
+#   (2) the structure of QMAEScheme remains unclear
+#       at the point the decryption function is written.
 
 
-dsrc = "presets"
-ddst = "data/processed"
+dsrc = "resae"
+ddst = "processed"
 
 
 if __name__ == "__main__":
 
-    warnings.filterwarnings("ignore", category=UserWarning)
-    # otherwise, scheme.export() always warns about file extension mismatch (.bin)
+    decryptor = QMAEDecryptor()
+    # use common decryptor since key is hardcoded
 
-    with open("_translate.json", encoding="utf-8") as f:
-        translator = json.load(f)
+    for r, d, f in os.walk(dsrc):
+        for a in f:
+            p = os.path.join(r, a)
+            p_new = p.replace(dsrc, ddst)
+            base, ext = os.path.splitext(p_new)
 
-    for src, dst in translator.items():
-        scheme = QMAEScheme(os.path.join(dsrc, src) + ".qmae")
-        scheme.export(
-            os.path.join(ddst, dst) + ".bin", fmt="/" in dst
-        )  # device-specific presets
-        print(src, "->", dst)
+            # make directory at destination when necessary
+            os.makedirs(os.path.dirname(p_new), exist_ok=True)
+
+            with open(p, "rb") as fin:
+                data = bytearray(fin.read())
+
+            if ext in [".json", ".aep", ".wav"]:
+                with open(p_new, "wb") as fout:
+                    fout.write(data)  # why isn't there an os.copy()?
+                    continue
+
+            data_dec = decryptor.decrypt(data)
+
+            if data_dec.startswith(b"RIFF"):
+                p_new = base + ".wav"
+
+            if ext == ".qmaep":
+                p_new = base + ".aep"
+
+            with open(p_new, "wb") as fout:
+                fout.write(data_dec)
+
+            print(p)
