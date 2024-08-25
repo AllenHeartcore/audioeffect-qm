@@ -1,7 +1,7 @@
-from ncae.audio import Audio
+from qmae.audio import Audio
 
 
-class NCAEPluginBT:
+class QMAEPluginBT:
 
     def __init__(self, data: dict):
 

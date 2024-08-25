@@ -18,7 +18,7 @@ class Audio:
             "tracknumber": tag["tracknumber"] or None,
         }
 
-    def apply(self, schemes: list):  # list of NCAEScheme's
+    def apply(self, schemes: list):  # list of QMAEScheme's
 
         for scheme in schemes:
             scheme._applyto(self)  # in-place operation

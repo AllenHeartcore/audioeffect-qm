@@ -5,7 +5,7 @@ import soundfile as sf
 from scipy.signal import resample, convolve
 import matplotlib.pyplot as plt
 
-from ncae.audio import Audio
+from qmae.audio import Audio
 
 
 class ImpulseResponse:

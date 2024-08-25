@@ -3,16 +3,16 @@ import warnings
 import os
 import json
 
-from ncae.audio import Audio
-from ncae.decrypt import read_encfile, NCAEDecryptor
-from ncae.plugins.convolve import NCAEPluginConvolve
-from ncae.plugins.bt import NCAEPluginBT
-from ncae.plugins.eq import NCAEPluginEQ
-from ncae.plugins.reverb import NCAEPluginReverb
-from ncae.plugins.se import NCAEPluginSE
+from qmae.audio import Audio
+from qmae.decrypt import read_encfile, QMAEDecryptor
+from qmae.plugins.convolve import QMAEPluginConvolve
+from qmae.plugins.bt import QMAEPluginBT
+from qmae.plugins.eq import QMAEPluginEQ
+from qmae.plugins.reverb import QMAEPluginReverb
+from qmae.plugins.se import QMAEPluginSE
 
 
-class NCAEScheme:
+class QMAEScheme:
 
     def __init__(self, filename: str):
 
@@ -22,23 +22,23 @@ class NCAEScheme:
         self.plugins = []
 
         key, data = read_encfile(filename)
-        decryptor = NCAEDecryptor(key)
+        decryptor = QMAEDecryptor(key)
         self.raw = decryptor.decrypt(data)
 
         try:
             d = json.loads(self.raw.decode("utf-8"))
             if d["bt"]["on"]:
-                self.plugins.append(NCAEPluginBT(d["bt"]))
+                self.plugins.append(QMAEPluginBT(d["bt"]))
             if d["eq"]["on"]:
-                self.plugins.append(NCAEPluginEQ(d["eq"]))
+                self.plugins.append(QMAEPluginEQ(d["eq"]))
             if d["rvb"]["on"]:
-                self.plugins.append(NCAEPluginReverb(d["rvb"]))
+                self.plugins.append(QMAEPluginReverb(d["rvb"]))
             if d["se"]["on"]:
-                self.plugins.append(NCAEPluginSE(d["se"]))
+                self.plugins.append(QMAEPluginSE(d["se"]))
             self.ext = ".json"
         except:
             try:
-                self.plugins.append(NCAEPluginConvolve(self.raw))
+                self.plugins.append(QMAEPluginConvolve(self.raw))
                 self.ext = ".wav"
             except:
                 warnings.warn("Unrecognized format")

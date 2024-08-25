@@ -3,7 +3,7 @@ import warnings
 import os
 import json
 
-from ncae.scheme import NCAEScheme
+from qmae.scheme import QMAEScheme
 
 
 dsrc = "presets"
@@ -19,7 +19,7 @@ if __name__ == "__main__":
         translator = json.load(f)
 
     for src, dst in translator.items():
-        scheme = NCAEScheme(os.path.join(dsrc, src) + ".ncae")
+        scheme = QMAEScheme(os.path.join(dsrc, src) + ".qmae")
         scheme.export(
             os.path.join(ddst, dst) + ".bin", fmt="/" in dst
         )  # device-specific presets

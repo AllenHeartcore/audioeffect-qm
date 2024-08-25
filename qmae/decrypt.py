@@ -12,7 +12,7 @@ def read_encfile(filename: str) -> tuple:
     with open(filename, "rb") as fin:
 
         magic = fin.read(4)
-        assert magic == b"NCAE"
+        assert magic == b"QMAE"
 
         ldata = toint(fin.read(4))
         fin.read(8)  # unused
@@ -27,7 +27,7 @@ def read_encfile(filename: str) -> tuple:
     return key, data
 
 
-class NCAEDecryptor:
+class QMAEDecryptor:
 
     def __init__(self, key: Union[bytes, bytearray, np.ndarray]):
 

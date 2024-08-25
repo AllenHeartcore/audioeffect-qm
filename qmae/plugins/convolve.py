@@ -4,11 +4,11 @@ import numpy as np
 import soundfile as sf
 from io import BytesIO
 
-from ncae.audio import Audio
-from ncae.plugins.utils import ImpulseResponse
+from qmae.audio import Audio
+from qmae.plugins.utils import ImpulseResponse
 
 
-class NCAEPluginConvolve:
+class QMAEPluginConvolve:
 
     def __init__(self, data: bytes):
 
