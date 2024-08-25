@@ -14,6 +14,13 @@ dsrc = "resae"
 ddst = "processed"
 
 
+exceptions = [
+    os.path.join("recommend", "SleepEffect"),
+    os.path.join("DJRemix"),
+    os.path.join("ugc", "DJ"),
+]
+
+
 if __name__ == "__main__":
 
     decryptor = QMAEDecryptor()
@@ -25,13 +32,27 @@ if __name__ == "__main__":
             p_new = p.replace(dsrc, ddst)
             base, ext = os.path.splitext(p_new)
 
+            # ignored folders
+            skip = False
+            for e in exceptions:
+                if p.startswith(os.path.join(dsrc, e)):
+                    skip = True
+                    break
+            if skip:
+                continue
+
+            # ignored extensions
+            if ext in [".json", ".csv"]:
+                continue
+
             # make directory at destination when necessary
             os.makedirs(os.path.dirname(p_new), exist_ok=True)
 
             with open(p, "rb") as fin:
                 data = bytearray(fin.read())
 
-            if ext in [".json", ".aep", ".wav"]:
+            # waived extensions
+            if ext in [".aep", ".wav"]:
                 with open(p_new, "wb") as fout:
                     fout.write(data)  # why isn't there an os.copy()?
                     continue
